@@ -1,0 +1,59 @@
+{% extends "hops_base.html" %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+      <div name = "al" class="alert alert-block alert-success"></div>
+  </div>
+  <div class="row">
+    <h1>Hops: A Beer Recommender!</h1>
+    <form action="/" class="navbar-form navbar-left" method="POST">
+      <div class="form-group">
+        <input id="test" name="beer_name" type="text" class="typeahead" placeholder="Enter a Beer Name" size=80>
+        <input id="index" type="hidden" name="index" value="">
+      </div>
+      <button type="submit" class="btn btn-default">Search</button>
+    </form>
+  </div>
+  {% endblock %}
+
+  {% block scripts %}
+  <script>
+    // var typeaheadSource = [{
+    //          id: 1, firstName: 'John'}, {
+    //          id: 2, firstName: 'Alex'}, {
+    //          id: 3, firstName: 'Terry'
+    //     }];
+    var products = [
+      {"id": 0, "name": "Deluxe Bicycle", "price": 499.98},
+      {"id": 1, "name": "Super Deluxe Trampoline", "price": 134.99},
+      {"id": 2,"name": "Super Duper Scooter","price": 49.95}
+    ];
+
+    var dataSource = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name', 'price'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        local: products
+
+    });
+
+    dataSource.initialize();
+
+    $('#test').typeahead({
+        minLength: 0,
+        highlight: true
+    }, {
+      source: dataSource,
+      display: function(item) {
+        return item.name + '-' + item.price
+      },
+      suggestion: function (data) {
+          return '<div>' +data.name  + '–' + data.price + '</div>'
+      }
+    });
+  </script>
+  {% endblock %}
